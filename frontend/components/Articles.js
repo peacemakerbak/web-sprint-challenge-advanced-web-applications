@@ -4,23 +4,33 @@ import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
+  const {articles, getArticles, deleteArticle, setCurrentArticle} = props
 
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
+ 
+   const token = localStorage.getItem("token");
+  //  console.log(token)
+
+   if(!token) {
+    return <Navigate to='/' />;
+   }
+
 
   useEffect(() => {
     // ✨ grab the articles here, on first render only
-  })
+    getArticles()
+  }, [])
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
     // and use the articles prop to generate articles
     <div className="articles">
       <h2>Articles</h2>
-      {
-        ![].length
+      {articles && articles.length === 0
           ? 'No articles yet'
-          : [].map(art => {
+          : articles.map(art => {
+         
             return (
               <div className="article" key={art.article_id}>
                 <div>
@@ -29,8 +39,8 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>Edit</button>
-                  <button disabled={true} onClick={Function.prototype}>Delete</button>
+                  <button onClick={() => setCurrentArticle(art)}>Edit</button>
+                  <button onClick={() => deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
             )
@@ -50,6 +60,6 @@ Articles.propTypes = {
   })).isRequired,
   getArticles: PT.func.isRequired,
   deleteArticle: PT.func.isRequired,
-  setCurrentArticleId: PT.func.isRequired,
-  currentArticleId: PT.number, // can be undefined or null
+  setCurrentArticle: PT.func.isRequired,
+  currentArticle: PT.object, // can be undefined or null
 }
